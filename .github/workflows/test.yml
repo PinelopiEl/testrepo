@@ -3,8 +3,8 @@ name: Build and Push Docker Images
 on:
   push:
     branches: [ main ]
-
-  workflow_dispatch:
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -24,6 +24,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set lowercase repo name
+        run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
       - name: Build and push PROD image
         uses: docker/build-push-action@v5
         with:
@@ -31,5 +34,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/test:latest
-            ghcr.io/${{ github.repository }}/test:${{ github.event.release.tag_name }}
+            ghcr.io/${{ env.REPO_LC }}/test:latest
+            ghcr.io/${{ env.REPO_LC }}/test:${{ github.sha }}
