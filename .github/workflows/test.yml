@@ -30,7 +30,7 @@ jobs:
       - name: Build and push PROD image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./demo/demo
           file: ./demo/demo/Dockerfile
           push: true
           tags: |
